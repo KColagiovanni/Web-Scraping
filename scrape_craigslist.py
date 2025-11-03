@@ -5,49 +5,78 @@ import json
 from bs4 import BeautifulSoup
 import time
 
-mr2_search_url = 'https://sfbay.craigslist.org/search/cta?query=mr2#search=2~gallery~0'
+def search_cl(keyword):
 
-options = Options()
-options.add_argument("--headless")  # run in background
-options.add_argument("--disable-blink-features=AutomationControlled")
-options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
-                     "AppleWebKit/537.36 (KHTML, like Gecko) "
-                     "Chrome/120.0.0.0 Safari/537.36")
-driver = webdriver.Chrome(options=options)
+    search_url = f'https://sfbay.craigslist.org/search/cta?query={keyword}#search=2~gallery~0'
 
-# driver.get("https://sfbay.craigslist.org/search/cta")
-driver.get(mr2_search_url)
-time.sleep(2)
-print(f'Title is: {driver.title}')
+    options = Options()
+    options.add_argument("--headless")  # run in background
+    options.add_argument("--disable-blink-features=AutomationControlled")
+    options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                         "AppleWebKit/537.36 (KHTML, like Gecko) "
+                         "Chrome/120.0.0.0 Safari/537.36")
+    driver = webdriver.Chrome(options=options)
+    driver.get(search_url)
+    time.sleep(2)
 
-html = driver.page_source
-# print(f'\nHTML: {html[:5000]}')
-soup = BeautifulSoup(html, 'html.parser')
-json_script = soup.find('script', {'id': 'ld_searchpage_results', 'type': 'application/ld+json'})
+    html = driver.page_source
+    soup = BeautifulSoup(html, 'html.parser')
+    json_script = soup.find('script', {'id': 'ld_searchpage_results', 'type': 'application/ld+json'})
 
-# print(f'json_script is: {json_script}')
+    if json_script:
+        data = json.loads(json_script.string)
+        items = data.get('itemListElement', [])
 
-if json_script:
-    data = json.loads(json_script.string)
-    items = data.get('itemListElement', [])
+        # Extract real listing links dynamically
+        post_links = driver.execute_script("""
+            const links = [];
+            document.querySelectorAll('a[href*="/cto/d/"]').forEach(a => {
+                if (a.href.startsWith("https://")) links.push(a.href);
+            });
+            return links;
+        """)
+        # post_links = [a["href"] for a in soup.select('li.cl-static-search-result a.titlestring')]
 
-    for entry in items:
-        item = entry.get("item", {})
-        name = item.get("name", "N/A")
-        price = item.get("offers", {}).get("price", "N/A")
-        currency = item.get("offers", {}).get("priceCurrency", "USD")
-        location = item.get("offers", {}).get("availableAtOrFrom", {}).get("address", {}).get("addressLocality", "N/A")
-        image_list = item.get("image", [])
-        image = image_list[0] if image_list else "N/A"
+        print(f'\n{keyword} Results:')
+        for i, entry in enumerate(items):
+            item = entry.get("item", {})
+            name = item.get("name", "N/A")
+            price = item.get("offers", {}).get("price", "N/A")
+            location = (
+                item.get("offers", {})
+                .get("availableAtOrFrom", {})
+                .get("address", {})
+                .get("addressLocality", "N/A")
+            )
+            link = post_links[i] if i < len(post_links) else "N/A"
 
-        if 'mr2' in name.lower():
-            print(f"{name} | {price} {currency} | {location} | {image}")
-else:
-    print("Could not find JSON data.")
+            if keyword in name:
+                print(f"{i+1}. {name} | ${price} | {location} | {link}")
+    else:
+        print("Could not find JSON data.")
 
+    driver.quit()
 
-# response = requests.get(mr2_search_url)
-# data = response.json()
-# print(json.dumps(data, indent=2))
+if '__main__' == __name__:
 
-driver.quit()
+    keywords = {
+        # Cars and Trucks
+        'cta':{
+            'MR2',
+            'Nova',
+            'Chevy II',
+            'Vega',
+            'Monte Carlo',
+            'Camaro',
+            'Valiant',
+            'Dart'
+        },
+        # Sporting
+        'sga':{
+            'Squat Rack',
+        }
+    }
+    print(list(keywords.keys())[0])
+
+    for kw in keywords['cta']:
+        search_cl(kw)
