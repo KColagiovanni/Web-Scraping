@@ -7,6 +7,7 @@ import time
 
 def search_cl(keyword):
 
+    count = 0
     search_url = f'https://sfbay.craigslist.org/search/cta?query={keyword}#search=2~gallery~0'
 
     options = Options()
@@ -21,6 +22,7 @@ def search_cl(keyword):
 
     html = driver.page_source
     soup = BeautifulSoup(html, 'html.parser')
+    print(soup.prettify()[:3000])
     json_script = soup.find('script', {'id': 'ld_searchpage_results', 'type': 'application/ld+json'})
 
     if json_script:
@@ -51,7 +53,8 @@ def search_cl(keyword):
             link = post_links[i] if i < len(post_links) else "N/A"
 
             if keyword in name:
-                print(f"{i+1}. {name} | ${price} | {location} | {link}")
+                count += 1
+                print(f"{count}. {name} | ${price} | {location} | {link}")
     else:
         print("Could not find JSON data.")
 
@@ -76,7 +79,7 @@ if '__main__' == __name__:
             'Squat Rack',
         }
     }
-    print(list(keywords.keys())[0])
+    # print(list(keywords.keys())[0])
 
     for kw in keywords['cta']:
         search_cl(kw)
