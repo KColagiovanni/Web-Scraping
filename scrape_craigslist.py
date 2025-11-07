@@ -1,6 +1,5 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import requests
 import json
 from bs4 import BeautifulSoup
 import time
@@ -18,11 +17,10 @@ def search_cl(keyword):
                          "Chrome/120.0.0.0 Safari/537.36")
     driver = webdriver.Chrome(options=options)
     driver.get(search_url)
-    time.sleep(2)
+    time.sleep(3)
 
-    html = driver.page_source
-    soup = BeautifulSoup(html, 'html.parser')
-    # print(soup.prettify()[:3000])
+    soup = BeautifulSoup(driver.page_source, 'html.parser')
+
     json_script = soup.find('script', {'id': 'ld_searchpage_results', 'type': 'application/ld+json'})
 
     if json_script:
@@ -37,7 +35,6 @@ def search_cl(keyword):
             });
             return links;
         """)
-        # post_links = [a["href"] for a in soup.select('li.cl-static-search-result a.titlestring')]
 
         print(f'\n{keyword} Results:')
         for i, entry in enumerate(items):
@@ -73,7 +70,7 @@ if '__main__' == __name__:
             'Vega',
             'Monte Carlo',
             # 'Camaro',
-            'Corvette',
+            # 'Corvette',
             'Valiant',
             'Dart'
         },
@@ -82,7 +79,6 @@ if '__main__' == __name__:
             'Squat Rack',
         }
     }
-    # print(list(keywords.keys())[0])
 
     for kw in keywords['cta']:
         search_cl(kw)
