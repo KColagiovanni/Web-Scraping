@@ -10,7 +10,7 @@ def search_cl(keyword):
     search_url = f'https://sfbay.craigslist.org/search/cta?query={keyword}#search=2~gallery~0'
 
     options = Options()
-    options.add_argument("--headless")  # run in background
+    # options.add_argument("--headless")  # run in background
     options.add_argument("--disable-blink-features=AutomationControlled")
     options.add_argument("user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
                          "AppleWebKit/537.36 (KHTML, like Gecko) "
