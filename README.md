@@ -1,1 +1,3 @@
-Search Craigslist Ads for specific cars for sale.
+Search Craigslist Ads for defined items for sale.
+
+Define items to be searched for and see the returned results.
