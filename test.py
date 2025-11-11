@@ -78,7 +78,7 @@ def search_cl(keyword):
     #     EC.presence_of_element_located((By.CSS_SELECTOR, "search-page"))
     # )
 
-    print("✅ search-page present:", bool(driver.find_elements(By.CSS_SELECTOR, "search-page")))
+    # print("✅ search-page present:", bool(driver.find_elements(By.CSS_SELECTOR, "search-page")))
     # time.sleep(5)
     #
     # # Wait longer for the <search-page> to appear
@@ -164,17 +164,18 @@ def search_cl(keyword):
     # print(f"\npost_links for {keyword}: {post_links}")
 
     time.sleep(5)
-    post_links = driver.execute_script("""
-        const anchors = Array.from(document.querySelectorAll('a.titlestring'));
-        return anchors.map(a => a.href).filter(h => h && h.startsWith('https'));
-    """)
-    print(f"\nFound {len(post_links)} post links for {keyword}:")
-    print(post_links)
+    # print(driver.page_source[:5000])
+    # post_links = driver.execute_script("""
+    #     const anchors = Array.from(document.querySelectorAll('a.titlestring'));
+    #     return anchors.map(a => a.href).filter(h => h && h.startsWith('https'));
+    # """)
+    # print(f"\nFound {len(post_links)} post links for {keyword}:")
+    # print(post_links)
 
     if json_script:
         data = json.loads(json_script.string)
         items = data.get('itemListElement', [])
-
+        print("\n🧩 RAW JSON (first 3000 chars):\n", json_script.string[:3000])
         print(f'\n{keyword} Results:')
         # for i, entry in enumerate(items):
         #     item = entry.get("item", {})
@@ -214,6 +215,7 @@ def search_cl(keyword):
 
         for i, entry in enumerate(items):
             item = entry.get("item", {})
+            # print(f'item is: {item}')
             name = item.get("name", "N/A")
             price = item.get("offers", {}).get("price", "N/A")
             location = (
@@ -224,9 +226,9 @@ def search_cl(keyword):
             )
 
             # ✅ Craigslist now includes the canonical listing link right here:
-            link = item.get("url")
+            link = item.get("url") or item.get("@id")
 
-            # print(f'link is: {link}')
+            print(f'original link is: {link}')
 
             # ✅ If "url" is missing, fallback to old image-ID or slug logic
             if not link:
@@ -239,7 +241,12 @@ def search_cl(keyword):
                             post_id = match.group(1)
                             break
                 slug = re.sub(r'[^a-zA-Z0-9]+', '-', name.lower()).strip('-')
+                print('\n---------------------------------------------')
+                print(f'base_url is: {base_url}')
+                print(f'slug is: {slug}')
+                print(f'post_id is: {post_id}')
                 link = f"{base_url}/cto/d/{slug}/{post_id}.html" if post_id else "N/A"
+                print(f'last link is: {link}')
 
             # print(f"post link is: {link}")
 
