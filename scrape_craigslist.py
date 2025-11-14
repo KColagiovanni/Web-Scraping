@@ -8,6 +8,7 @@ def search_cl(keyword):
 
     count = 0
     search_url = f'https://sfbay.craigslist.org/search/cta?query={keyword}#search=2~gallery~0'
+    link_info = {}
 
     options = Options()
     options.add_argument("--headless")  # run in background
@@ -31,10 +32,31 @@ def search_cl(keyword):
         post_links = driver.execute_script("""
             const links = [];
             document.querySelectorAll('a[href*="/cto/d/"]').forEach(a => {
-                if (a.href.startsWith("https://")) links.push(a.href);
+                if (a.href.startsWith("https://") && !links.includes(a.href)) links.push(a.href);
             });
             return links;
         """)
+
+        print('\n####################################################################################################')
+        print(f'{keyword} post_links are:')
+        for link_num in range(len(post_links)):
+            # print(f'\n{link}')
+            # link_info[link] = {}
+
+            link = post_links[link_num]
+            print(f'post link is: {link}')
+
+            post_id = link.split('/')[-1].split('.')[0]
+            print(f'  - post_id is: {post_id}')
+
+            post_desc = link.split('/')[-2]
+            print(f'  - post_desc is: {post_desc}')
+
+            region = link.split('/')[-5]
+            print(f'  - region is: {region}')
+
+            link_info[link_num] = {'post_id':post_id, 'post_desc':post_desc, 'region':region, 'link':link}
+            print(f'link_info is: {link_info}')
 
         print(f'\n{keyword} Results:')
         for i, entry in enumerate(items):
@@ -66,9 +88,9 @@ if '__main__' == __name__:
         'cta':{
             'MR2',
             'Nova',
-            'Bel Air',
-            'Belair',
-            'Vega',
+            # 'Bel Air',
+            # 'Belair',
+            # 'Vega',
             'Monte Carlo',
             # 'Camaro',
             # 'Corvette',
