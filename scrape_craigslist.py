@@ -49,14 +49,18 @@ def search_cl(keyword):
             post_id = link.split('/')[-1].split('.')[0]
             print(f'  - post_id is: {post_id}')
 
-            post_desc = link.split('/')[-2]
+            post_desc = link.split('/')[-2].replace('-', ' ')
             print(f'  - post_desc is: {post_desc}')
 
             region = link.split('/')[-5]
             print(f'  - region is: {region}')
 
             link_info[link_num] = {'post_id':post_id, 'post_desc':post_desc, 'region':region, 'link':link}
-            print(f'link_info is: {link_info}')
+        # print(f'link_info is: {link_info}')
+        for entry in link_info:
+            print(f"link_info[entry]['post_desc'] is {link_info[entry]['post_desc']}")
+            if keyword in link_info[entry]['post_desc']:
+                print(f'{link_info[entry]}')
 
         print(f'\n{keyword} Results:')
         for i, entry in enumerate(items):
