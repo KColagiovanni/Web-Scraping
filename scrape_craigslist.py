@@ -58,25 +58,31 @@ def search_cl(keyword):
             region = link.split('/')[-5]
             print(f'  - region is: {region}')
 
-            link_info[link_num] = {'post_id':post_id, 'post_desc':post_desc, 'post_desc_split':post_desc_split,'region':region, 'link':link}
+            link_info[link_num] = {
+                'post_id':post_id,
+                'post_desc':post_desc,
+                'post_desc_split':post_desc_split,
+                'region':region,
+                'link':link
+            }
 
         # print(f'link_info is: {link_info}')
         for entry in link_info:
             print(f'entry is: {entry}')
             if ' ' in keyword:
-                print(f'{keyword} is multiple words')
+                # print(f'{keyword} is multiple words')
                 keyword_split = keyword.split(' ')
                 for index in range(len(keyword_split)):
-                    print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
-                    print(f'post_desc_split is: {post_desc_split}')
+                    # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
+                    # print(f'post_desc_split is: {post_desc_split}')
                     if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
                         print(f'link_info[entry] is: {link_info[entry]}')
 
             else:
                 # print(f"link_info[entry]['post_desc'] is {link_info[entry]['post_desc']}")
-                print(f'{keyword} is a single word')
-                print(f'keyword_lower() is: {keyword.lower()}')
-                print(f'post_desc_split is: {post_desc_split}')
+                # print(f'{keyword} is a single word')
+                # print(f'keyword_lower() is: {keyword.lower()}')
+                # print(f'post_desc_split is: {post_desc_split}')
                 if keyword.lower() in link_info[entry]['post_desc_split']:
                     print(f'link_info[entry] is: {link_info[entry]}')
 
@@ -91,7 +97,16 @@ def search_cl(keyword):
                 .get("address", {})
                 .get("addressLocality", "N/A")
             )
-            link = post_links[i] if i < len(post_links) else "N/A"
+
+            # link = post_links[i] if i < len(post_links) else "N/A"
+            location_and_description = f'{location.replace(" ", "-").lower()}-{name.replace(" ", "-").lower()}'
+            print(f'location_and_description is: {location_and_description}')
+            for post_link in post_links:
+                if location_and_description in post_link:
+                    link = post_link
+                    break
+                else:
+                    link = 'N/A'
 
             if keyword in name:
                 count += 1
