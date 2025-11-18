@@ -67,24 +67,25 @@ def search_cl(keyword):
             }
 
         # print(f'link_info is: {link_info}')
-        for entry in link_info:
-            print(f'entry is: {entry}')
-            if ' ' in keyword:
-                # print(f'{keyword} is multiple words')
-                keyword_split = keyword.split(' ')
-                for index in range(len(keyword_split)):
-                    # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
-                    # print(f'post_desc_split is: {post_desc_split}')
-                    if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
-                        print(f'link_info[entry] is: {link_info[entry]}')
+        # for entry in link_info:
+        #     print(f'entry is: {entry}')
+        #     if ' ' in keyword:
+        #         # print(f'{keyword} is multiple words')
+        #         keyword_split = keyword.split(' ')
+        #         for index in range(len(keyword_split)):
+        #             # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
+        #             # print(f'post_desc_split is: {post_desc_split}')
+        #             if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
+        #                 print(f'link_info[entry] is: {link_info[entry]}')
 
-            else:
+            # else:
                 # print(f"link_info[entry]['post_desc'] is {link_info[entry]['post_desc']}")
                 # print(f'{keyword} is a single word')
                 # print(f'keyword_lower() is: {keyword.lower()}')
                 # print(f'post_desc_split is: {post_desc_split}')
-                if keyword.lower() in link_info[entry]['post_desc_split']:
-                    print(f'link_info[entry] is: {link_info[entry]}')
+
+                # if keyword.lower() in link_info[entry]['post_desc_split']:
+                #     print(f'link_info[entry] is: {link_info[entry]}')
 
         print(f'\n{keyword} Results:')
         for i, entry in enumerate(items):
@@ -100,15 +101,19 @@ def search_cl(keyword):
 
             # link = post_links[i] if i < len(post_links) else "N/A"
             location_and_description = f'{location.replace(" ", "-").lower()}-{name.replace(" ", "-").lower()}'
-            print(f'location_and_description is: {location_and_description}')
+            # print(f'\nlength of location_and_description is: {len(location_and_description)}')
+            # print(f'location_and_description is: {location_and_description}')
             for post_link in post_links:
-                if location_and_description in post_link:
+                if location_and_description[:35] in post_link:
                     link = post_link
                     break
                 else:
                     link = 'N/A'
 
-            if keyword in name:
+            # print(f'name is: {name}')
+            # print(f'keyword is: {keyword}')
+            # print(f'price is: {price}')
+            if keyword.lower() in name.lower():
                 count += 1
                 print(f"{count}. {name} | ${price} | {location} | {link}")
         if count == 0:
@@ -123,16 +128,17 @@ if '__main__' == __name__:
     keywords = {
         # Cars and Trucks
         'cta':{
-            'MR2',
-            'Nova',
+            # 'MR2',
+            # 'Nova',
             # 'Bel Air',
             # 'Belair',
             # 'Vega',
             'Monte Carlo',
+            # 'Cobalt'
             # 'Camaro',
             # 'Corvette',
-            'Valiant',
-            'Dart'
+            # 'Valiant',
+            # 'Dart'
         },
         # Sporting
         'sga':{
