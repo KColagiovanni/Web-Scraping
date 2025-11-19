@@ -45,7 +45,7 @@ def search_cl(keyword):
             # link_info[link] = {}
 
             link = post_links[link_num]
-            print(f'post link is: {link}')
+            print(f'\npost link is: {link}')
 
             post_id = link.split('/')[-1].split('.')[0]
             print(f'  - post_id is: {post_id}')
@@ -66,17 +66,18 @@ def search_cl(keyword):
                 'link':link
             }
 
-        # print(f'link_info is: {link_info}')
-        # for entry in link_info:
-        #     print(f'entry is: {entry}')
-        #     if ' ' in keyword:
-        #         # print(f'{keyword} is multiple words')
-        #         keyword_split = keyword.split(' ')
-        #         for index in range(len(keyword_split)):
-        #             # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
-        #             # print(f'post_desc_split is: {post_desc_split}')
-        #             if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
-        #                 print(f'link_info[entry] is: {link_info[entry]}')
+
+        print(f'\nlink_info is: {link_info}')
+        for entry in link_info:
+            print(f'\nentry is: {entry}')
+            if ' ' in keyword:
+                # print(f'{keyword} is multiple words')
+                keyword_split = keyword.split(' ')
+                for index in range(len(keyword_split)):
+                    # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
+                    # print(f'post_desc_split is: {post_desc_split}')
+                    if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
+                        print(f'link_info[{entry}] is: {link_info[entry]}')
 
             # else:
                 # print(f"link_info[entry]['post_desc'] is {link_info[entry]['post_desc']}")
