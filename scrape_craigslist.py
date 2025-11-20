@@ -29,34 +29,36 @@ def search_cl(keyword):
         data = json.loads(json_script.string)
         items = data.get('itemListElement', [])
 
+        # print(f'items is: {items}')
+
         # Extract real listing links dynamically
         post_links = driver.execute_script("""
             const links = [];
-            document.querySelectorAll('a[href*="/cto/d/"]').forEach(a => {
+            document.querySelectorAll('a[href*="/cto/d/"],a[href*="/ctd/d/"]').forEach(a => {
                 if (a.href.startsWith("https://") && !links.includes(a.href)) links.push(a.href);
             });
             return links;
         """)
 
         print('\n####################################################################################################')
-        print(f'{keyword} post_links are:')
+        # print(f'{keyword} post_links are:')
         for link_num in range(len(post_links)):
             # print(f'\n{link}')
             # link_info[link] = {}
 
             link = post_links[link_num]
-            print(f'\npost link is: {link}')
+            # print(f'\npost link is: {link}')
 
             post_id = link.split('/')[-1].split('.')[0]
-            print(f'  - post_id is: {post_id}')
+            # print(f'  - post_id is: {post_id}')
 
             post_desc = link.split('/')[-2]#replace('-', ' ')
             post_desc_split = post_desc.split('-')
-            print(f'  - post_desc is: {post_desc}')
-            print(f'  - post_desc_list is: {post_desc_split}')
+            # print(f'  - post_desc is: {post_desc}')
+            # print(f'  - post_desc_list is: {post_desc_split}')
 
             region = link.split('/')[-5]
-            print(f'  - region is: {region}')
+            # print(f'  - region is: {region}')
 
             link_info[link_num] = {
                 'post_id':post_id,
@@ -67,17 +69,17 @@ def search_cl(keyword):
             }
 
 
-        print(f'\nlink_info is: {link_info}')
-        for entry in link_info:
-            print(f'\nentry is: {entry}')
-            if ' ' in keyword:
-                # print(f'{keyword} is multiple words')
-                keyword_split = keyword.split(' ')
-                for index in range(len(keyword_split)):
-                    # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
-                    # print(f'post_desc_split is: {post_desc_split}')
-                    if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
-                        print(f'link_info[{entry}] is: {link_info[entry]}')
+        # print(f'\nlink_info is: {link_info}')
+        # for entry in link_info:
+        #     # print(f'\nentry is: {entry}')
+        #     if ' ' in keyword:
+        #         # print(f'{keyword} is multiple words')
+        #         keyword_split = keyword.split(' ')
+        #         for index in range(len(keyword_split)):
+        #             # print(f'keyword_split[index].lower() is: {keyword_split[index].lower()}')
+        #             # print(f'post_desc_split is: {post_desc_split}')
+        #             if keyword_split[index].lower() in link_info[entry]['post_desc_split']:
+        #                 print(f'link_info[{entry}] is: {link_info[entry]}')
 
             # else:
                 # print(f"link_info[entry]['post_desc'] is {link_info[entry]['post_desc']}")
@@ -129,17 +131,17 @@ if '__main__' == __name__:
     keywords = {
         # Cars and Trucks
         'cta':{
-            # 'MR2',
-            # 'Nova',
-            # 'Bel Air',
-            # 'Belair',
-            # 'Vega',
+            'MR2',
+            'Nova',
+            'Bel Air',
+            'Belair',
+            'Vega',
             'Monte Carlo',
-            # 'Cobalt'
+            'Cobalt'
             # 'Camaro',
             # 'Corvette',
-            # 'Valiant',
-            # 'Dart'
+            'Valiant',
+            'Dart'
         },
         # Sporting
         'sga':{
