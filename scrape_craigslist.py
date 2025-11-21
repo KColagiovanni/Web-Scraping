@@ -3,6 +3,7 @@ from selenium.webdriver.chrome.options import Options
 import json
 from bs4 import BeautifulSoup
 import time
+import re
 
 def search_cl(keyword):
 
@@ -10,6 +11,7 @@ def search_cl(keyword):
     search_url = f'https://sfbay.craigslist.org/search/cta?query={keyword}#search=2~gallery~0'
     link_info = {}
     post_desc_split = []
+    link = 'N/A'
 
     options = Options()
     options.add_argument("--headless")  # run in background
@@ -102,7 +104,11 @@ def search_cl(keyword):
                 .get("addressLocality", "N/A")
             )
 
+
+
             # link = post_links[i] if i < len(post_links) else "N/A"
+            print(f'name is: {name}')
+            print('modified name is: ' + re.sub("\W", "", name))
             location_and_description = f'{location.replace(" ", "-").lower()}-{name.replace(" ", "-").lower()}'
             # print(f'\nlength of location_and_description is: {len(location_and_description)}')
             # print(f'location_and_description is: {location_and_description}')
@@ -110,8 +116,6 @@ def search_cl(keyword):
                 if location_and_description[:35] in post_link:
                     link = post_link
                     break
-                else:
-                    link = 'N/A'
 
             # print(f'name is: {name}')
             # print(f'keyword is: {keyword}')
@@ -137,7 +141,7 @@ if '__main__' == __name__:
             'Belair',
             'Vega',
             'Monte Carlo',
-            'Cobalt'
+            'Cobalt',
             # 'Camaro',
             # 'Corvette',
             'Valiant',
