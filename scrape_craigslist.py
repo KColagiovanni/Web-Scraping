@@ -107,13 +107,16 @@ def search_cl(keyword):
 
 
             # link = post_links[i] if i < len(post_links) else "N/A"
-            print(f'name is: {name}')
-            print('modified name is: ' + re.sub("\W", "", name))
+            # print(f'\nname is: {name}')
+            # print('modified name is: ' + re.sub("[^a-zA-Z0-9\s]", "", name))
+            name = re.sub("[^a-zA-Z0-9\s]", "", name)
             location_and_description = f'{location.replace(" ", "-").lower()}-{name.replace(" ", "-").lower()}'
             # print(f'\nlength of location_and_description is: {len(location_and_description)}')
             # print(f'location_and_description is: {location_and_description}')
             for post_link in post_links:
-                if location_and_description[:35] in post_link:
+                if location_and_description[:20] in post_link:
+                    # print(f'location_and_description[:20] is: {location_and_description[:20]}')
+                    # print(f'post_link is: {post_link}')
                     link = post_link
                     break
 
