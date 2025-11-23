@@ -5,12 +5,13 @@ from bs4 import BeautifulSoup
 import time
 import re
 
-def search_cl(keyword):
+def search_cl(keyword, category):
 
     count = 0
-    search_url = f'https://sfbay.craigslist.org/search/cta?query={keyword}#search=2~gallery~0'
+    search_url = f'https://sfbay.craigslist.org/search/{category}?query={keyword}#search=2~gallery~0'
     link_info = {}
     post_desc_split = []
+    post_link_list = []
     link = 'N/A'
 
     options = Options()
@@ -32,15 +33,21 @@ def search_cl(keyword):
         items = data.get('itemListElement', [])
 
         # print(f'items is: {items}')
-
+        categories = [
+            'a[href*="/cto/d/"]',
+            'a[href*="/ctd/d/"]',
+            'a[href*="/spo/d/"]',
+            'a[href*="/sgd/d/"]',
+        ]
         # Extract real listing links dynamically
         post_links = driver.execute_script("""
             const links = [];
-            document.querySelectorAll('a[href*="/cto/d/"],a[href*="/ctd/d/"]').forEach(a => {
+            var data = arguments[0];
+            document.querySelectorAll(data).forEach(a => {
                 if (a.href.startsWith("https://") && !links.includes(a.href)) links.push(a.href);
             });
             return links;
-        """)
+        """, categories)
 
         print('\n####################################################################################################')
         # print(f'{keyword} post_links are:')
@@ -109,12 +116,16 @@ def search_cl(keyword):
             # link = post_links[i] if i < len(post_links) else "N/A"
             # print(f'\nname is: {name}')
             # print('modified name is: ' + re.sub("[^a-zA-Z0-9\s]", "", name))
-            name = re.sub("[^a-zA-Z0-9\s]", "", name)
-            location_and_description = f'{location.replace(" ", "-").lower()}-{name.replace(" ", "-").lower()}'
+            new_name = re.sub("[^a-zA-Z0-9\s]", "", name)
+            location_and_description = f'{location.replace(" ", "-").lower()}-{new_name.replace(" ", "-").lower()}'
             # print(f'\nlength of location_and_description is: {len(location_and_description)}')
             # print(f'location_and_description is: {location_and_description}')
             for post_link in post_links:
-                if location_and_description[:20] in post_link:
+                post_link_list.append(len(post_link.split("/")[-2]))
+                # print(f'post_link description length is: {len(post_link.split("/")[-2])}')
+                # print(f'location_and_description[:len(location_and_description) - 2] is {location_and_description[:len(location_and_description) - 2]}')
+                if location_and_description[:len(post_link.split("/")[-2])] in post_link:
+                    print(f'{location_and_description[:len(post_link.split("/")[-2])]} is in {post_link}')
                     # print(f'location_and_description[:20] is: {location_and_description[:20]}')
                     # print(f'post_link is: {post_link}')
                     link = post_link
@@ -131,6 +142,9 @@ def search_cl(keyword):
     else:
         print("Could not find JSON data.")
 
+    # print(f'AVERAGE post_link_list length is: {sum(post_link_list)/len(post_link_list)}')
+    # print(f'MAX post_link_list length is: {max(post_link_list)}')
+    # print(f'MIX post_link_list length is: {min(post_link_list)}')
     driver.quit()
 
 if '__main__' == __name__:
@@ -156,5 +170,8 @@ if '__main__' == __name__:
         }
     }
 
-    for kw in keywords['cta']:
-        search_cl(kw)
+    for key in keywords.keys():
+        for kw in keywords[key]:
+            search_cl(kw, key)
+    # for kw in keywords['sga']:
+    #     search_cl(kw)
