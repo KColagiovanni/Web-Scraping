@@ -34,10 +34,10 @@ def search_cl(keyword, category):
 
         # print(f'items is: {items}')
         categories = [
-            'a[href*="/cto/d/"]',
-            'a[href*="/ctd/d/"]',
-            'a[href*="/spo/d/"]',
-            'a[href*="/sgd/d/"]',
+            'a[href*="/cto/d/"]',  # Car and Trucks
+            'a[href*="/ctd/d/"]',  # Car and Trucks
+            'a[href*="/spo/d/"]',  # Sporting Goods
+            'a[href*="/sgd/d/"]',  # Sporting Goods
         ]
         # Extract real listing links dynamically
         post_links = driver.execute_script("""

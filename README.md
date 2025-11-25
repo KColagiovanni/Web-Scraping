@@ -5,4 +5,4 @@ Define items to be searched for and see the returned results.
 
 #### How to use:
 Define the keyword(s) and category abbreviation to be searched under the "if '__main__' == __name__:" statement and run 
-this program.
+this program. The output will have the results that were found, separated by each keyword.
